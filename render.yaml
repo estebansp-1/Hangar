@@ -1,0 +1,39 @@
+# Render Blueprint: API de HANGAR (plan gratuito)
+# Render → New → Blueprint → elige este repositorio. Las variables con sync: false se piden al crear.
+services:
+  - type: web
+    name: hangar-api
+    runtime: node
+    plan: free
+    region: virginia
+    rootDir: Backend
+    # --include=dev: el CLI de Prisma es dependencia de desarrollo y hace falta para generar el cliente y crear las tablas
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_NAME
+        value: Administrador HANGAR
