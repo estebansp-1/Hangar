@@ -38,6 +38,9 @@ export function Preloader() {
         .from('.pre__line', { strokeDashoffset: 900, duration: 1.7, stagger: 0.06, ease: 'power2.inOut' }, 0)
         .to(c, { v: 100, duration: 1.9, ease: 'power2.inOut', onUpdate: () => num.current && (num.current.textContent = String(Math.round(c.v)).padStart(3, '0')) }, 0)
         .to('.pre__win', { opacity: 1, stagger: { each: 0.03, from: 'random' }, duration: 0.2 }, 0.9)
+        .from('.pre__word span', { yPercent: 115, duration: 1.1, stagger: 0.07, ease: 'expo.out' }, 0.35)
+        .from('.pre__beam', { scaleX: 0, duration: 1.3, ease: 'expo.inOut' }, 0.6)
+        .from('.pre__tag', { opacity: 0, y: 10, duration: 0.8 }, 1.1)
         .to(root.current, { clipPath: 'inset(0 0 100% 0)', duration: 1, ease: 'expo.inOut' }, '+=0.2');
     },
     { scope: root },
@@ -45,6 +48,7 @@ export function Preloader() {
   if (done) return null;
   return (
     <div className="pre" ref={root}>
+      <div className="pre__center">
       <svg viewBox="0 0 120 160" className="pre__svg" aria-hidden="true">
         <path className="pre__line" d="M10 150 H110" />
         <path className="pre__line" d="M30 150 V30 H90 V150" />
@@ -55,10 +59,18 @@ export function Preloader() {
           <rect key={i} className="pre__win" x={36 + (i % 3) * 17} y={34 + Math.floor(i / 3) * 13} width="12" height="7" />
         ))}
       </svg>
+        <h1 className="pre__word" aria-label="HANGAR">
+          {'HANGAR'.split('').map((c, i) => (
+            <span key={i} aria-hidden="true">
+              {c}
+            </span>
+          ))}
+        </h1>
+        <i className="pre__beam" aria-hidden="true" />
+        <span className="pre__tag mono">Architecture · Interiors · Cali</span>
+      </div>
       <div className="pre__meta container">
-        <span className="pre__brand serif">
-          Hangar<span>.</span>
-        </span>
+        <span />
         <span className="pre__num serif" ref={num}>
           000
         </span>
