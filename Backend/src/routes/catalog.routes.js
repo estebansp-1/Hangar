@@ -16,7 +16,10 @@ router.get(
     if (featured === 'true') where.featured = true;
     if (maxPrice) where.price = { lte: Number(maxPrice) };
     if (minBedrooms) where.bedrooms = { gte: Number(minBedrooms) };
-    if (q) where.OR = [{ name: { contains: String(q) } }, { city: { contains: String(q) } }, { neighborhood: { contains: String(q) } }];
+    if (q) {
+      const term = { contains: String(q), mode: 'insensitive' };
+      where.OR = [{ name: term }, { city: term }, { neighborhood: term }];
+    }
     const orderBy =
       sort === 'price-asc' ? { price: 'asc' } : sort === 'price-desc' ? { price: 'desc' } : sort === 'area' ? { area: 'desc' } : [{ featured: 'desc' }, { createdAt: 'asc' }];
     const list = await prisma.property.findMany({ where, orderBy });

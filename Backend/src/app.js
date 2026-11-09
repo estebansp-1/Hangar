@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'node:path';
 import { env } from './config/env.js';
-import { UPLOAD_DIR } from './lib/uploads.js';
+import { UPLOAD_DIR, usesCloudinary } from './lib/uploads.js';
 import authRoutes from './routes/auth.routes.js';
 import catalogRoutes from './routes/catalog.routes.js';
 import meRoutes from './routes/me.routes.js';
@@ -20,7 +20,7 @@ app.use(cors({ origin: env.clientUrl.split(','), credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 if (!env.isProd) app.use(morgan('dev'));
 
-app.use('/uploads', express.static(path.resolve(UPLOAD_DIR), { maxAge: '30d', immutable: true }));
+if (!usesCloudinary) app.use('/uploads', express.static(path.resolve(UPLOAD_DIR), { maxAge: '30d', immutable: true }));
 app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'hangar-api', domain: 'arquitectura-interiores-inmobiliaria', time: new Date().toISOString() }));
 app.use('/api/auth', authRoutes);
 app.use('/api', catalogRoutes);

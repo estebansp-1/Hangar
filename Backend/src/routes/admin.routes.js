@@ -5,7 +5,7 @@ import { asyncHandler, badRequest, notFound } from '../lib/errors.js';
 import { validate } from '../middleware/validate.js';
 import { publicUser, requireAdmin, requireAuth } from '../middleware/auth.js';
 import { propertyData, serializeProperty, serializeStyle, slugify, styleData } from '../services/catalog.js';
-import { uploadImage, publicUploadUrl } from '../lib/uploads.js';
+import { uploadImage, storeImage } from '../lib/uploads.js';
 
 const router = Router();
 router.use(requireAuth, requireAdmin);
@@ -226,10 +226,14 @@ router.patch(
 );
 
 // ── Fotos ───────────────────────────────────────────
-router.post('/uploads', uploadImage.single('image'), (req, res) => {
-  if (!req.file) throw badRequest('Adjunta una imagen en el campo "image"');
-  res.status(201).json({ url: publicUploadUrl(req, req.file.filename) });
-});
+router.post(
+  '/uploads',
+  uploadImage.single('image'),
+  asyncHandler(async (req, res) => {
+    if (!req.file) throw badRequest('Adjunta una imagen en el campo "image"');
+    res.status(201).json({ url: await storeImage(req, req.file) });
+  }),
+);
 
 // ── Usuarios ────────────────────────────────────────
 router.get(

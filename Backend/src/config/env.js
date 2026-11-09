@@ -23,4 +23,5 @@ export const env = {
     pass: process.env.SMTP_PASS,
   },
   mailFrom: process.env.MAIL_FROM || 'HANGAR Estudio <no-reply@hangar.studio>',
+  brevoKey: process.env.BREVO_API_KEY,
 };

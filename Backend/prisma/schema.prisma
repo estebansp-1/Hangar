@@ -1,12 +1,14 @@
 // HANGAR — Arquitectura · Interiores · Inmobiliaria
-// Para cambiar a PostgreSQL/MySQL: cambia `provider` y DATABASE_URL en .env
+// Base de datos: PostgreSQL (Neon en producción y desarrollo).
+// DATABASE_URL = conexión con pooling (la usa la app); DIRECT_URL = conexión directa (la usa `prisma db push`).
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {

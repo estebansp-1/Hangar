@@ -27,8 +27,26 @@ async function getTransporter() {
   return transporterPromise;
 }
 
+/** "Nombre <correo>" → { name, email } */
+const parseFrom = (from) => {
+  const m = from.match(/^\s*"?([^"<]*)"?\s*<([^>]+)>\s*$/);
+  return m ? { name: m[1].trim(), email: m[2].trim() } : { email: from.trim() };
+};
+
+/** Envío por la API HTTP de Brevo (puerto 443): funciona aunque el host bloquee SMTP */
+async function sendWithBrevo({ to, subject, html, text }) {
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': env.brevoKey, 'content-type': 'application/json', accept: 'application/json' },
+    body: JSON.stringify({ sender: parseFrom(env.mailFrom), to: [{ email: to }], subject, htmlContent: html, textContent: text }),
+  });
+  if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
 export async function sendMail({ to, subject, html, text }) {
   try {
+    if (env.brevoKey) return await sendWithBrevo({ to, subject, html, text });
     const transporter = await getTransporter();
     const info = await transporter.sendMail({ from: env.mailFrom, to, subject, html, text });
     const preview = nodemailer.getTestMessageUrl(info);
