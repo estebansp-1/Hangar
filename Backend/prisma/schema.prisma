@@ -1,0 +1,116 @@
+// HANGAR — Arquitectura · Interiores · Inmobiliaria
+// Para cambiar a PostgreSQL/MySQL: cambia `provider` y DATABASE_URL en .env
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String          @id @default(cuid())
+  name         String
+  email        String          @unique
+  passwordHash String
+  role         String          @default("USER") // USER | ADMIN
+  phone        String?
+  lang         String          @default("es") // es | en (idioma de los correos)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  resets       PasswordReset[]
+  favorites    Favorite[]
+  requests     Request[]
+}
+
+model PasswordReset {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeHash   String
+  attempts   Int       @default(0)
+  expiresAt  DateTime
+  verifiedAt DateTime?
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+}
+
+// Propiedad en venta: apartamento, casa, penthouse, loft o edificio completo
+model Property {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  type         String   // apartment | house | penthouse | loft | building
+  name         String
+  city         String
+  neighborhood String
+  price        Float    // COP (Float: los precios superan el entero de 32 bits)
+  area         Float    // m²
+  bedrooms     Int      @default(0)
+  bathrooms    Int      @default(0)
+  parking      Int      @default(0)
+  floors       Int      @default(1)
+  units        Int      @default(1) // unidades disponibles
+  status       String   @default("AVAILABLE") // AVAILABLE | RESERVED | SOLD
+  delivery     String?  // fecha de entrega, ej. "2027-06"
+  styleId      String?
+  featured     Boolean  @default(false)
+  published    Boolean  @default(true)
+  images       String   // JSON: ["/img/…webp", …]
+  description  String   // JSON: { es, en }
+  features     String   // JSON: { es: [], en: [] }
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Estilo de diseño interior que se vende por m²
+model Style {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String   // JSON { es, en }
+  tagline     String   // JSON { es, en }
+  description String   // JSON { es, en }
+  materials   String   // JSON { es: [], en: [] }
+  palette     String   // JSON ["#hex", …]
+  scene       String   // JSON: colores para la escena 3D
+  images      String   // JSON
+  pricePerM2  Float
+  position    Int      @default(0)
+  published   Boolean  @default(true)
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      String   // property | style
+  refId     String   // slug de la propiedad o del estilo
+  createdAt DateTime @default(now())
+
+  @@unique([userId, kind, refId])
+}
+
+// Solicitud: agendar visita a una propiedad o cotizar un proyecto de diseño/construcción
+model Request {
+  id        String   @id @default(cuid())
+  number    Int      @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  kind      String   // VISIT | QUOTE
+  status    String   @default("NEW") // NEW | CONTACTED | SCHEDULED | CLOSED | CANCELLED
+  property  String?  // slug
+  style     String?  // slug
+  service   String?  // interior | house | building
+  date      String?  // fecha preferida (YYYY-MM-DD)
+  time      String?
+  area      Float?
+  budget    Float?
+  estimate  Float?   // estimado calculado (área × precio m² del estilo)
+  city      String?
+  phone     String
+  message   String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
