@@ -217,3 +217,24 @@ export function requestReceivedEmail({ name, request: r, lang = 'es' }) {
     text: pick(lang, `Recibimos tu solicitud #${r.number}.`, `We received your request #${r.number}.`),
   };
 }
+
+/** Aviso interno: un visitante pidió hablar con una persona desde el asistente */
+export function supportHandoffEmail({ name, contact, message, transcript = [] }) {
+  const rows = transcript
+    .slice(-10)
+    .map((m) => `<p style="margin:0 0 8px;"><strong style="color:${m.role === 'user' ? C.text : C.olive};">${m.role === 'user' ? 'Cliente' : 'Asistente'}:</strong> ${esc(m.content)}</p>`)
+    .join('');
+  return {
+    subject: `HANGAR · ${name} necesita ayuda`,
+    html: layout({
+      lang: 'es',
+      preheader: `${name} (${contact}) escribió desde el asistente de la página.`,
+      eyebrow: 'Asistente de la página',
+      title: `${esc(name)}<br><i style="color:${C.olive};">quiere hablar contigo.</i>`,
+      body: `<p style="margin:0 0 6px;"><strong style="color:${C.text};">Contacto:</strong> ${esc(contact)}</p>
+        <p style="margin:0 0 20px;"><strong style="color:${C.text};">Mensaje:</strong> ${esc(message)}</p>
+        ${rows ? `<div style="padding:18px 20px;border:1px solid ${C.line};border-radius:14px;background:${C.paper};font-size:14px;line-height:22px;">${rows}</div>` : ''}`,
+    }),
+    text: `${name} (${contact}) pide ayuda desde la página: ${message}`,
+  };
+}

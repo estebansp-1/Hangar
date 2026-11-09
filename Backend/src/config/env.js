@@ -24,4 +24,10 @@ export const env = {
   },
   mailFrom: process.env.MAIL_FROM || 'HANGAR Estudio <no-reply@hangar.studio>',
   brevoKey: process.env.BREVO_API_KEY,
+  // asistente de la página
+  anthropicKey: process.env.ANTHROPIC_API_KEY,
+  supportEmail: process.env.SUPPORT_EMAIL || 'juanesteban9283@gmail.com',
+  supportPhone: process.env.SUPPORT_PHONE || '573161499556',
+  supportPhoneLabel: process.env.SUPPORT_PHONE_LABEL || '316 149 9556',
+  callmebotKey: process.env.CALLMEBOT_APIKEY,
 };

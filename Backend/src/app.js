@@ -9,6 +9,7 @@ import authRoutes from './routes/auth.routes.js';
 import catalogRoutes from './routes/catalog.routes.js';
 import meRoutes from './routes/me.routes.js';
 import adminRoutes from './routes/admin.routes.js';
+import assistRoutes from './routes/assist.routes.js';
 import { errorHandler, notFoundHandler } from './middleware/error.js';
 
 export const app = express();
@@ -26,6 +27,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api', catalogRoutes);
 app.use('/api/me', meRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/assist', assistRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

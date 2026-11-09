@@ -37,3 +37,9 @@ services:
         sync: false
       - key: ADMIN_NAME
         value: Administrador HANGAR
+      - key: SUPPORT_EMAIL
+        value: juanesteban9283@gmail.com
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CALLMEBOT_APIKEY
+        sync: false
