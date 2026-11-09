@@ -10,10 +10,12 @@ async function main() {
   const email = (process.env.ADMIN_EMAIL || 'admin@hangar.studio').toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
   if (!password) throw new Error('Define ADMIN_PASSWORD en Backend/.env antes de correr el seed');
+  // la contraseña se sincroniza en cada despliegue: la de ADMIN_PASSWORD siempre es la vigente
+  const passwordHash = await bcrypt.hash(password, 10);
   await prisma.user.upsert({
     where: { email },
-    update: { role: 'ADMIN' },
-    create: { email, name: process.env.ADMIN_NAME || 'Administrador', role: 'ADMIN', passwordHash: await bcrypt.hash(password, 10) },
+    update: { role: 'ADMIN', passwordHash },
+    create: { email, name: process.env.ADMIN_NAME || 'Administrador', role: 'ADMIN', passwordHash },
   });
   console.log(`✅ Administrador listo: ${email}`);
 }
