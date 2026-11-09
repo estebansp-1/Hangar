@@ -239,10 +239,6 @@ export function Footer() {
             <span key={i}>{c}</span>
           ))}
         </div>
-        <div className="footer__bottom mono">
-          <span>© {new Date().getFullYear()} HANGAR — {t('brand.tag')}</span>
-          <span>{t('footer.credits')}</span>
-        </div>
       </div>
     </footer>
   );

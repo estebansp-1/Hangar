@@ -41,7 +41,7 @@
 .footer__cols div { display: flex; flex-direction: column; gap: 10px; }
 .footer__cols a { color: var(--muted); width: fit-content; transition: color 200ms; }
 .footer__cols a:hover { color: var(--text); }
-.footer__giant { font-size: clamp(90px, 23vw, 380px); line-height: 0.82; margin-top: 70px; display: flex; overflow: hidden; letter-spacing: -0.03em; }
+.footer__giant { font-size: clamp(56px, 11vw, 168px); line-height: 1.05; margin-top: 56px; padding-bottom: 28px; display: flex; overflow: hidden; letter-spacing: -0.03em; }
 .footer__giant span { display: inline-block; }
 .footer__giant span:last-child { color: var(--accent-text); }
 .footer__bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 24px; font-size: 11px; color: var(--dim); }
