@@ -1,14 +1,21 @@
 /* Preloader */
 .pre { position: fixed; inset: 0; z-index: 9999; background: var(--bg); display: grid; place-items: center; clip-path: inset(0 0 0% 0); }
 .pre__center { display: flex; flex-direction: column; align-items: center; gap: 18px; margin-top: -6vh; }
-.pre__svg { width: clamp(64px, 9vw, 96px); }
+/* Logo que se construye: mismas piezas que el logo del navbar, a gran tamaño */
+.pre__logo { width: clamp(104px, 17vw, 168px); overflow: visible; }
+.pl__grid line { stroke: var(--line-2); stroke-width: 0.25; stroke-dasharray: 0.8 0.8; }
+.pl__vault { fill: none; stroke: var(--text); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 1; }
+.pl__vault--in { stroke-width: 1; opacity: 0.35; }
+.pl__stem { stroke: var(--text); stroke-width: 2.6; stroke-linecap: round; transform-box: fill-box; }
+.pl__floor { stroke: var(--text); stroke-width: 1.2; stroke-linecap: round; opacity: 0.55; transform-box: fill-box; }
+.pl__beam { stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; }
+.pl__ground { stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 1; }
+.pl__sun { fill: var(--accent); transform-box: fill-box; }
 /* Wordmark del cargador: Cinzel pesado, grande y con tracking amplio */
 .pre__word { display: flex; overflow: hidden; margin: 0; padding: 0 0 0.06em 0.18em; font-family: var(--display); font-weight: 800; font-size: clamp(56px, 13vw, 168px); line-height: 1; letter-spacing: 0.18em; color: var(--text); }
 .pre__word span { display: inline-block; }
 .pre__beam { display: block; width: min(62vw, 720px); height: 3px; border-radius: 3px; background: linear-gradient(90deg, transparent, var(--accent) 20%, var(--accent) 80%, transparent); transform-origin: center; }
 .pre__tag { font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--muted); }
-.pre__line { fill: none; stroke: var(--text); stroke-width: 1.2; stroke-dasharray: 900; }
-.pre__win { fill: var(--accent); opacity: 0; }
 .pre__meta { position: absolute; left: 0; right: 0; bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
 .pre__brand { font-size: 34px; }
 .pre__brand span { color: var(--accent-text); }
@@ -39,7 +46,7 @@
 .fav.is-active { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, transparent); }
 
 /* Footer */
-.footer { border-top: 1px solid var(--line); padding: 90px 0 28px; overflow: hidden; background: var(--bg-2); transition: background-color 500ms; }
+.footer { border-top: 1px solid var(--line); padding: 90px 0 0; overflow: hidden; background: var(--bg-2); transition: background-color 500ms; }
 .footer__grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; }
 .footer__lead { font-size: clamp(30px, 3.4vw, 50px); margin-bottom: 24px; max-width: 16ch; }
 .footer__form { display: flex; gap: 10px; max-width: 480px; }
@@ -47,11 +54,19 @@
 .footer__cols div { display: flex; flex-direction: column; gap: 10px; }
 .footer__cols a { color: var(--muted); width: fit-content; transition: color 200ms; }
 .footer__cols a:hover { color: var(--text); }
-.footer__giant { font-size: clamp(64px, 14vw, 220px); line-height: 1.05; margin-top: 56px; padding-bottom: 28px; display: flex; justify-content: center; overflow: hidden; letter-spacing: -0.03em; }
-.footer__giant span { display: inline-block; }
-.footer__giant span:last-child { color: var(--accent-text); }
+.footer__brand { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 2vw, 28px); margin-top: 64px; margin-bottom: 5px; color: var(--text); }
+.footer__word { font-family: var(--display); font-weight: 600; font-size: clamp(40px, 7vw, 108px); line-height: 1; letter-spacing: 0.3em; text-transform: uppercase; margin-right: -0.3em; }
+/* línea lima que subraya el nombre, justo antes del borde inferior */
+.footer__line { display: block; width: min(64%, 760px); height: 3px; margin: 0 auto 22px; border-radius: 3px; background: linear-gradient(90deg, transparent, var(--accent) 18%, var(--accent) 82%, transparent); transform-origin: center; }
 .footer__bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 24px; font-size: 11px; color: var(--dim); }
 @media (max-width: 760px) {
   .footer__grid { grid-template-columns: 1fr; }
   .footer__form { flex-direction: column; }
+}
+
+/* Celular: el nombre del footer a lo ancho */
+@media (max-width: 600px) {
+  .footer__brand { gap: 12px; margin-top: 48px; }
+  .footer__word { font-size: 12.5vw; letter-spacing: 0.22em; margin-right: -0.22em; }
+  .footer__line { width: 86%; }
 }

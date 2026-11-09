@@ -1,5 +1,6 @@
 /* ───── Atención: WhatsApp + asistente ───── */
-.assist { position: fixed; right: 24px; bottom: 24px; z-index: 125; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.assist { position: fixed; right: 24px; bottom: 24px; z-index: 125; display: flex; flex-direction: column; gap: 12px; align-items: center; transition: transform 400ms var(--ease-out), opacity 300ms; }
+.assist.is-tucked { transform: translateY(140%); opacity: 0; pointer-events: none; }
 .assist__fab {
   width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
   box-shadow: 0 14px 30px -12px rgba(15, 23, 42, 0.45);

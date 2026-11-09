@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion, useMotionValue, useSpring } from 'motion/react';
+import { AnimatePresence, m as motion, useMotionValue, useSpring } from 'motion/react';
 import { gsap, ScrollTrigger, useGSAP } from '../../lib/gsap';
 import { toast, useToasts } from '../../store/ui';
 import { useAuth, useFavorites } from '../../store/auth';
@@ -9,7 +9,7 @@ import { getLenis } from './SmoothScroll';
 import { CONTACT } from '../../content/site';
 import './chrome.css';
 
-/* ───────── Preloader (una vez por sesión): se dibuja la silueta de un edificio ───────── */
+/* ───────── Preloader (una vez por sesión): el logo de HANGAR se construye como una obra ───────── */
 export function Preloader() {
   const [done, setDone] = useState(() => {
     try {
@@ -35,12 +35,25 @@ export function Preloader() {
             setDone(true);
           },
         })
-        .from('.pre__line', { strokeDashoffset: 900, duration: 1.7, stagger: 0.06, ease: 'power2.inOut' }, 0)
-        .to(c, { v: 100, duration: 1.9, ease: 'power2.inOut', onUpdate: () => num.current && (num.current.textContent = String(Math.round(c.v)).padStart(3, '0')) }, 0)
-        .to('.pre__win', { opacity: 1, stagger: { each: 0.03, from: 'random' }, duration: 0.2 }, 0.9)
-        .from('.pre__word span', { yPercent: 115, duration: 1.1, stagger: 0.07, ease: 'expo.out' }, 0.35)
-        .from('.pre__beam', { scaleX: 0, duration: 1.3, ease: 'expo.inOut' }, 0.6)
-        .from('.pre__tag', { opacity: 0, y: 10, duration: 0.8 }, 1.1)
+        .to(c, { v: 100, duration: 2.1, ease: 'power2.inOut', onUpdate: () => num.current && (num.current.textContent = String(Math.round(c.v)).padStart(3, '0')) }, 0)
+        // 1. replanteo: retícula de obra y línea de terreno
+        .from('.pl__grid line', { opacity: 0, duration: 0.5, stagger: 0.02 }, 0)
+        .from('.pl__ground', { strokeDashoffset: 1, duration: 0.5, ease: 'power3.out' }, 0.05)
+        // 2. estructura: suben las dos columnas de la H
+        .from('.pl__stem', { scaleY: 0, transformOrigin: '50% 100%', duration: 0.55, stagger: 0.12, ease: 'expo.out' }, 0.35)
+        // 3. losas: los pisos aparecen de abajo hacia arriba
+        .from('.pl__floor', { scaleX: 0, transformOrigin: '50% 50%', duration: 0.3, stagger: 0.07, ease: 'back.out(2)' }, 0.65)
+        // 4. viga en voladizo lima
+        .from('.pl__beam', { strokeDashoffset: 1, duration: 0.45, ease: 'power3.inOut' }, 0.95)
+        // 5. cubierta: se traza la bóveda del hangar
+        .from('.pl__vault', { strokeDashoffset: 1, duration: 0.8, ease: 'power2.inOut' }, 1.05)
+        .from('.pl__vault--in', { strokeDashoffset: 1, duration: 0.7, ease: 'power2.inOut' }, 1.2)
+        // 6. sale el sol
+        .from('.pl__sun', { scale: 0, transformOrigin: '50% 50%', duration: 0.5, ease: 'back.out(3)' }, 1.7)
+        .to('.pl__grid', { opacity: 0, duration: 0.6 }, 1.6)
+        .from('.pre__word span', { yPercent: 115, duration: 1.1, stagger: 0.06, ease: 'expo.out' }, 0.9)
+        .from('.pre__beam', { scaleX: 0, duration: 1.1, ease: 'expo.inOut' }, 1.2)
+        .from('.pre__tag', { opacity: 0, y: 10, duration: 0.7 }, 1.5)
         .to(root.current, { clipPath: 'inset(0 0 100% 0)', duration: 1, ease: 'expo.inOut' }, '+=0.2');
     },
     { scope: root },
@@ -49,15 +62,23 @@ export function Preloader() {
   return (
     <div className="pre" ref={root}>
       <div className="pre__center">
-      <svg viewBox="0 0 120 160" className="pre__svg" aria-hidden="true">
-        <path className="pre__line" d="M10 150 H110" />
-        <path className="pre__line" d="M30 150 V30 H90 V150" />
-        {Array.from({ length: 8 }).map((_, i) => (
-          <path key={i} className="pre__line" d={`M30 ${45 + i * 13} H90`} />
-        ))}
-        {Array.from({ length: 24 }).map((_, i) => (
-          <rect key={i} className="pre__win" x={36 + (i % 3) * 17} y={34 + Math.floor(i / 3) * 13} width="12" height="7" />
-        ))}
+      <svg viewBox="0 0 48 48" className="pre__logo" aria-hidden="true">
+        <g className="pl__grid">
+          {[8, 16, 24, 32, 40].map((x) => (
+            <line key={`v${x}`} x1={x} y1="4" x2={x} y2="44" />
+          ))}
+          {[8, 16, 24, 32, 40].map((y) => (
+            <line key={`h${y}`} x1="4" y1={y} x2="44" y2={y} />
+          ))}
+        </g>
+        <path className="pl__vault" pathLength="1" d="M7 40V22.5C7 13.4 14.6 6 24 6s17 7.4 17 16.5V40" />
+        <path className="pl__vault pl__vault--in" pathLength="1" d="M11.5 40V23c0-6.9 5.6-12.5 12.5-12.5S36.5 16.1 36.5 23v17" />
+        <path className="pl__stem" d="M17 40V19" />
+        <path className="pl__stem" d="M31 40V19" />
+        {[34.5, 29].map((y) => [14.5, 28.5].map((x) => <path key={`${x}${y}`} className="pl__floor" d={`M${x} ${y}h5`} />))}
+        <path className="pl__beam" pathLength="1" d="M17 25h18.5" />
+        <path className="pl__ground" pathLength="1" d="M3 40h42" />
+        <circle className="pl__sun" cx="38.5" cy="12" r="2.2" />
       </svg>
         <h1 className="pre__word" aria-label="HANGAR">
           {'HANGAR'.split('').map((c, i) => (
@@ -213,7 +234,8 @@ export function Footer() {
   const root = useRef(null);
   useGSAP(
     () => {
-      gsap.from('.footer__giant span', { yPercent: 105, stagger: 0.05, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: root.current, start: 'top 85%' } });
+      gsap.from('.footer__brand > *', { y: 28, opacity: 0, stagger: 0.12, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: root.current, start: 'top 85%' } });
+      gsap.from('.footer__line', { scaleX: 0, duration: 1.3, ease: 'expo.inOut', delay: 0.3, scrollTrigger: { trigger: root.current, start: 'top 85%' } });
     },
     { scope: root, dependencies: [pathname], revertOnUpdate: true },
   );
@@ -246,11 +268,10 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="footer__giant serif" aria-hidden="true">
-          {'Hangar.'.split('').map((c, i) => (
-            <span key={i}>{c}</span>
-          ))}
+        <div className="footer__brand">
+          <span className="footer__word">Hangar</span>
         </div>
+        <i className="footer__line" aria-hidden="true" />
       </div>
     </footer>
   );

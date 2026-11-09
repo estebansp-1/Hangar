@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, m as motion } from 'motion/react';
 import { ArrowUp, Check, Sparkles, UserRound, X } from 'lucide-react';
 import { api } from '../../services';
 import { useAuth } from '../../store/auth';
@@ -90,6 +90,21 @@ export default function Assist() {
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' });
   }, [msgs, busy, offerHuman]);
+  // en celular, al llegar al final de la página los botones se esconden para no tapar el nombre del footer
+  const [tucked, setTucked] = useState(false);
+  useEffect(() => {
+    let io;
+    const t = setTimeout(() => {
+      const target = document.querySelector('.footer__line');
+      if (!target || typeof IntersectionObserver === 'undefined') return;
+      io = new IntersectionObserver(([e]) => setTucked(e.isIntersecting && window.innerWidth <= 600));
+      io.observe(target);
+    }, 400);
+    return () => {
+      clearTimeout(t);
+      io?.disconnect();
+    };
+  }, [pathname]);
   useEffect(() => {
     if (!open) return;
     const esc = (e) => e.key === 'Escape' && setOpen(false);
@@ -144,7 +159,7 @@ export default function Assist() {
 
   return (
     <>
-      <div className={`assist ${open ? 'is-open' : ''}`}>
+      <div className={`assist ${open ? 'is-open' : ''} ${tucked && !open ? 'is-tucked' : ''}`}>
         <a className="assist__fab assist__fab--wa" href={wa} target="_blank" rel="noreferrer" aria-label={t.wa} title={t.wa}>
           <WhatsAppIcon />
         </a>
