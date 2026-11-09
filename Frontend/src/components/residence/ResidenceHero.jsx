@@ -129,7 +129,7 @@ export default function ResidenceHero() {
               <Leaf size={14} /> {lang === 'en' ? 'Green certification' : 'Certificación verde'} <strong>A++</strong>
             </div>
             <div className="rh__actions">
-              <button className="btn btn--ghost btn--sm" onClick={() => setPlan(true)}>
+              <button className="btn btn--ghost btn--sm" onClick={() => setPlan(true)} aria-label={lang === 'en' ? 'Explore 2D plan' : 'Explorar Plano 2D'}>
                 <Map size={15} /> {lang === 'en' ? 'Explore 2D plan' : 'Explorar Plano 2D'}
               </button>
               {phase === 4 && (

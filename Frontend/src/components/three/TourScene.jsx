@@ -51,10 +51,18 @@ function Rig({ progress, fades }) {
     const k = (u < 0.45 ? 1.6 : 0.35) * (1 - ramp(u, 0.8, 0.95));
     pos.x += mouse.current.x * k;
     pos.y += mouse.current.y * k * 0.5;
+    // en vertical (celular) el titular ocupa la parte de arriba: al inicio la cámara centra el edificio
+    // y mira más arriba para que la torre quede en la mitad inferior, sin dejar vacío abajo
+    const portrait = size.width < size.height;
+    if (portrait) {
+      const w = 1 - ramp(u, 0.18, 0.36);
+      look.x += 11 * w;
+      look.y += 13 * w;
+    }
     camera.position.copy(pos);
     camera.lookAt(look);
     // en pantallas angostas abrimos el lente para que el edificio quepa
-    const fov = size.width < size.height ? 58 : 38;
+    const fov = portrait ? 60 : 38;
     if (Math.abs(camera.fov - fov) > 0.1) {
       camera.fov = fov;
       camera.updateProjectionMatrix();

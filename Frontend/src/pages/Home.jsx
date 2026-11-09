@@ -196,6 +196,14 @@ function Process() {
   const { t, l } = useI18n();
   useGSAP(
     () => {
+      const mm = gsap.matchMedia();
+      // Celular: tarjetas apiladas que aparecen al bajar (el scroll lateral cortaba el texto)
+      mm.add('(max-width: 760px)', () => {
+        gsap.utils.toArray('.step').forEach((el) => {
+          gsap.from(el, { opacity: 0, y: 40, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
+        });
+      });
+      mm.add('(min-width: 761px)', () => {
       const track = root.current.querySelector('.process__track');
       const distance = () => track.scrollWidth - window.innerWidth + 64;
       const tween = gsap.to(track, {
@@ -212,6 +220,8 @@ function Process() {
         gsap.fromTo(el.querySelector('img'), { scale: 1.3 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: el, containerAnimation: tween, start: 'left right', end: 'right left', scrub: true } });
       });
       gsap.to('.process__bar i', { scaleX: 1, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top top', end: () => `+=${distance()}`, scrub: true } });
+      });
+      return () => mm.revert();
     },
     { scope: root },
   );
