@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, m as motion } from 'motion/react';
 import { ArrowRight, ArrowUpRight, ClipboardList, Heart, House, LayoutGrid, LogOut, Menu, Moon, Sun, UserRound } from 'lucide-react';
 import { CONTACT } from '../../content/site';
 import { useAuth } from '../../store/auth';

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { m as motion } from 'motion/react';
 import { FavButton } from './layout/Chrome';
 import { useI18n } from '../i18n';
 import { money, num, STATUS_TONE } from '../lib/format';

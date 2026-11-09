@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, m as motion } from 'motion/react';
 import { Box, DraftingCompass, Map, Sun, X, ArrowRight, Leaf } from 'lucide-react';
 import { gsap, SplitText, useGSAP } from '../../lib/gsap';
 import { usePrefs, useI18n } from '../../i18n';

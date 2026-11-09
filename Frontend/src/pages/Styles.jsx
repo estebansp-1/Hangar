@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { m as motion } from 'motion/react';
 import { Copy } from 'lucide-react';
 import { gsap, SplitText, useGSAP } from '../lib/gsap';
 import { api } from '../services';

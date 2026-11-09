@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { m as motion } from 'motion/react';
 import { gsap, SplitText, useGSAP } from '../lib/gsap';
 import { api } from '../services';
 import { useAsync } from '../hooks/useAsync';
