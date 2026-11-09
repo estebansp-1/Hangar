@@ -123,16 +123,18 @@
 .sustain__item .muted { font-size: 13px; }
 @media (max-width: 900px) { .sustain__grid, .sustain__items { grid-template-columns: 1fr; } }
 
-/* Proceso en celular: columna, sin fijar la sección */
+/* Proceso en celular: carrusel lateral con tarjetas que caben en una pantalla */
 @media (max-width: 760px) {
-  .process { height: auto; overflow: visible; padding: 72px 0 56px; gap: 28px; }
-  .process__bar { display: none; }
-  .process__track { flex-direction: column; width: auto; gap: 40px; will-change: auto; }
-  .step { width: 100%; grid-template-columns: 1fr; gap: 16px; }
-  .step__media { aspect-ratio: 4 / 3; }
-  .step__body { flex-direction: row; align-items: flex-start; gap: 16px; padding: 0; }
-  .step__num { font-size: 56px; }
-  .step__body h3 { font-size: 32px; margin-bottom: 6px; }
+  .process { height: 100svh; gap: 18px; padding-top: calc(var(--nav-h) + 4px); justify-content: flex-start; }
+  .process__head h2 { font-size: clamp(30px, 8.6vw, 40px); margin-top: 8px; }
+  .process__bar { width: 30vw; }
+  .process__track { gap: 16px; }
+  .step { width: 80vw; grid-template-columns: 1fr; gap: 14px; align-items: start; }
+  .step__media { aspect-ratio: auto; height: min(38svh, 300px); border-radius: 20px; }
+  .step__body { height: auto; flex-direction: row; align-items: flex-start; gap: 12px; padding: 0; }
+  .step__num { font-size: 48px; }
+  .step__body h3 { font-size: 28px; margin-bottom: 6px; }
+  .step__body p { font-size: 14px; line-height: 1.5; }
 }
 
 /* Planos 3D en celular: titular compacto arriba, el edificio debajo */
@@ -144,4 +146,15 @@
 @media (max-width: 640px) {
   /* deja libre la franja inferior para WhatsApp y el asistente */
   .tour__panel { bottom: 78px; }
+}
+
+/* Planos 3D en celular: tarjeta compacta para que el recorrido y el plano se vean */
+@media (max-width: 640px) {
+  .tour__card { padding: 16px 18px; border-radius: 20px; }
+  .tour__card h2 { font-size: 26px; margin: 6px 0 6px; }
+  .tour__card p { font-size: 13.5px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .tour__specs { margin-top: 8px; font-size: 11px; }
+  .tour__styles { margin: 10px 0 10px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .tour__styles .chip { flex: none; }
+  .tour__cta { padding-top: 10px; }
 }

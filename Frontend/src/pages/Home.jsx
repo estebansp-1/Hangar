@@ -1,6 +1,6 @@
 import { lazy, Suspense, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, m as motion } from 'motion/react';
 import { gsap, SplitText, useGSAP } from '../lib/gsap';
 import { api } from '../services';
 import { useAsync } from '../hooks/useAsync';
@@ -197,13 +197,8 @@ function Process() {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
-      // Celular: tarjetas apiladas que aparecen al bajar (el scroll lateral cortaba el texto)
-      mm.add('(max-width: 760px)', () => {
-        gsap.utils.toArray('.step').forEach((el) => {
-          gsap.from(el, { opacity: 0, y: 40, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
-        });
-      });
-      mm.add('(min-width: 761px)', () => {
+      // Carrusel lateral fijado en todas las pantallas; en celular las tarjetas se ajustan por CSS
+      mm.add('all', () => {
       const track = root.current.querySelector('.process__track');
       const distance = () => track.scrollWidth - window.innerWidth + 64;
       const tween = gsap.to(track, {

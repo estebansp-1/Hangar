@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { Orbit } from './env';
 import * as THREE from 'three';
 import { mat, Post, RB, StaticShadows, useAdaptiveDpr, useInView } from './kit';
 
@@ -187,7 +187,7 @@ export default function StructureViewer({ kind = 'house', theme = 'light' }) {
       </mesh>
       <Levels kind={kind} m={m} />
       <Cam kind={kind} />
-      <OrbitControls target={[0, TARGET[kind], 0]} enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.7} minPolarAngle={0.6} maxPolarAngle={1.42} />
+      <Orbit target={[0, TARGET[kind], 0]} enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.7} minPolarAngle={0.6} maxPolarAngle={1.42} />
       <StaticShadows key={`${kind}${theme}`} />
       <Post radius={1} intensity={2} />
     </Canvas>

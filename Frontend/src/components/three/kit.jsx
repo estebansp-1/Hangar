@@ -1,11 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries, mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { EffectComposer, N8AO, SMAA, ToneMapping } from '@react-three/postprocessing';
 import { PerformanceMonitor } from '@react-three/drei';
-import { ToneMappingMode } from 'postprocessing';
 
 /*
  * Kit de detalle para las maquetas 3D:
@@ -355,15 +353,43 @@ export function useAdaptiveDpr() {
 /** Sombras estáticas: el mapa solo se recalcula cuando algo marca needsUpdate */
 export function StaticShadows({ frames = 2 }) {
   const n = useRef(frames);
-  useFrame(({ gl }) => {
+  useFrame(({ gl, invalidate }) => {
     gl.shadowMap.autoUpdate = false;
     if (n.current > 0) {
       gl.shadowMap.needsUpdate = true;
       n.current--;
+      invalidate();
     }
   });
   return null;
 }
+
+/**
+ * Render bajo demanda: la escena solo se dibuja cuando algo cambia.
+ * Despierta el canvas con el scroll, el puntero y el tamaño de ventana; cada animación
+ * en curso pide el siguiente cuadro con invalidate() hasta que se asienta.
+ * Quieta, la escena no consume GPU ni batería.
+ */
+export function DemandDriver() {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    const wake = () => invalidate();
+    const opts = { passive: true };
+    window.addEventListener('scroll', wake, opts);
+    window.addEventListener('pointermove', wake, opts);
+    window.addEventListener('touchmove', wake, opts);
+    window.addEventListener('resize', wake, opts);
+    return () => {
+      window.removeEventListener('scroll', wake);
+      window.removeEventListener('pointermove', wake);
+      window.removeEventListener('touchmove', wake);
+      window.removeEventListener('resize', wake);
+    };
+  }, [invalidate]);
+  return null;
+}
+/** dt acotado: tras una pausa (render bajo demanda) el primer cuadro no salta de golpe */
+export const stepDt = (dt) => Math.min(dt, 1 / 30);
 /**
  * Árbol: tronco cónico con ramas y copa por racimos.
  * kind: 'round' (frondoso) · 'tall' (columnar) · 'olive' (copa ligera plateada)
@@ -578,12 +604,20 @@ export function Vase({ position, m, h = 0.28 }) {
 }
 
 /* ───────── Postproceso ───────── */
-export function Post({ radius = 1.2, intensity = 2.4, color = 'black' }) {
+const LazyPost = lazy(() => import('./post'));
+const LazyTourPost = lazy(() => import('./post').then((m) => ({ default: m.TourPost })));
+/** Postproceso diferido: mientras llega, la escena se dibuja igual con el tone mapping del renderer */
+export function Post(props) {
   return (
-    <EffectComposer multisampling={0} enableNormalPass={false}>
-      <N8AO halfRes aoRadius={radius} intensity={intensity} distanceFalloff={0.8} quality="performance" color={color} />
-      <SMAA />
-      <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-    </EffectComposer>
+    <Suspense fallback={null}>
+      <LazyPost {...props} />
+    </Suspense>
+  );
+}
+export function TourPost(props) {
+  return (
+    <Suspense fallback={null}>
+      <LazyTourPost {...props} />
+    </Suspense>
   );
 }

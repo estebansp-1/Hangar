@@ -208,9 +208,16 @@ export function Apartment({ scene, theme = 'light' }) {
     KEYS.forEach((k) => target[k].set(scene?.[k] || '#dddddd'));
   }, [scene, target]);
 
-  useFrame((_, dt) => {
+  useFrame((state, rawDt) => {
+    const dt = Math.min(rawDt, 1 / 30);
     const a = 1 - Math.pow(0.003, dt); // transición suave entre estilos
-    KEYS.forEach((k) => m[k].color.lerp(target[k], a));
+    let changing = false;
+    KEYS.forEach((k) => {
+      const c = m[k].color;
+      if (Math.abs(c.r - target[k].r) + Math.abs(c.g - target[k].g) + Math.abs(c.b - target[k].b) > 0.002) changing = true;
+      c.lerp(target[k], a);
+    });
+    if (changing) state.invalidate();
     x.glow.emissiveIntensity = THREE.MathUtils.lerp(x.glow.emissiveIntensity, 0.6 + T.lights * 2.4, a);
   });
 

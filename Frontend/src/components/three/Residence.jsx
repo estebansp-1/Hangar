@@ -1,8 +1,9 @@
-import { createContext, Suspense, useContext, useEffect, useMemo, useRef } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Edges, Environment, Grid, Lightformer } from '@react-three/drei';
+import { Edges, Grid } from '@react-three/drei';
+import { StudioEnv } from './env';
 import * as THREE from 'three';
-import { glassMat, mat, Post, rbox, Shrub, Sofa, StaticShadows, Table, Tree, useInView, useAdaptiveDpr } from './kit';
+import { DemandDriver, glassMat, mat, Post, rbox, Shrub, Sofa, StaticShadows, Table, Tree, useInView } from './kit';
 
 /*
  * Residencia HANGAR — construcción procedural guiada por scroll.
@@ -20,6 +21,10 @@ export const PHASES = [0, 0.15, 0.4, 0.7, 0.9, 1];
 export const LEVELS = [0, 3.4, 6.8, 10.2]; // cotas en metros
 
 const LERP = 0.07;
+// suavizado por tiempo (no por cuadro): igual a LERP a 60 fps, pero se asienta igual de rápido en cualquier equipo
+const ease = (rate, dt) => 1 - Math.exp(-rate * Math.min(dt, 1 / 30));
+const CAM_RATE = -Math.log(1 - LERP) * 60;
+const BUILD_RATE = -Math.log(1 - LERP * 1.6) * 60;
 const box = new THREE.BoxGeometry(1, 1, 1);
 const cyl = new THREE.CylinderGeometry(1, 1, 1, 20);
 const ball = new THREE.IcosahedronGeometry(1, 1);
@@ -56,12 +61,15 @@ function Build({ from, to, children, rise = 2.5, base = 0 }) {
   const ref = useRef();
   const { progress } = useContext(Ctx);
   const t = useRef(0);
-  useFrame(({ gl }) => {
+  useFrame(({ gl, invalidate }, dt) => {
     const target = THREE.MathUtils.clamp((progress.current - from) / (to - from), 0, 1);
-    const step = (target - t.current) * LERP * 1.6;
+    const step = (target - t.current) * ease(BUILD_RATE, dt);
     t.current += step;
-    // sombras: solo se recalculan mientras el nivel se está construyendo
-    if (Math.abs(step) > 0.0004) gl.shadowMap.needsUpdate = true;
+    // mientras el nivel se construye: recalcular sombras y pedir el siguiente cuadro
+    if (Math.abs(step) > 0.0004) {
+      gl.shadowMap.needsUpdate = true;
+      invalidate();
+    }
     const e = 1 - Math.pow(1 - t.current, 3);
     if (!ref.current) return;
     ref.current.visible = t.current > 0.01;
@@ -256,7 +264,8 @@ function Rig() {
   const tgt = useRef(new THREE.Vector3(...SHOTS[0].t));
   const a = useMemo(() => new THREE.Vector3(), []);
   const b = useMemo(() => new THREE.Vector3(), []);
-  useFrame((state) => {
+  useFrame((state, dt) => {
+    const k1 = ease(CAM_RATE, dt);
     const p = progress.current;
     let i = 0;
     while (i < SHOT_AT.length - 2 && p > SHOT_AT[i + 1]) i++;
@@ -265,9 +274,18 @@ function Rig() {
     // leve paralaje con el puntero
     a.x += state.pointer.x * 1.5;
     a.y += state.pointer.y * 0.8;
-    pos.current.lerp(a, LERP);
+    pos.current.lerp(a, k1);
+    let moving = pos.current.distanceToSquared(a) > 1e-5;
     a.fromArray(SHOTS[i].t).lerp(b.fromArray(SHOTS[i + 1].t), k);
-    tgt.current.lerp(a, LERP);
+    // en vertical (celular) no hay tarjeta a la derecha: la cámara apunta al centro del edificio
+    if (size.width < size.height) {
+      a.x = 1.5;
+      a.z = 0;
+    }
+    tgt.current.lerp(a, k1);
+    moving = moving || tgt.current.distanceToSquared(a) > 1e-5;
+    // la cámara sigue acercándose a su destino: pedir otro cuadro (si no, la escena queda quieta)
+    if (moving) state.invalidate();
     camera.position.copy(pos.current);
     camera.lookAt(tgt.current);
     const fov = size.width < size.height ? 62 : 36;
@@ -315,12 +333,11 @@ export default function Residence({ progress, mode = 'real', theme = 'light' }) 
     const m = gridRef.current?.material;
     if (m) m.depthWrite = false;
   }, [mode, night]);
-  const [dpr, monitor] = useAdaptiveDpr();
   const ctx = useMemo(() => ({ progress, mode, mats, pal: P }), [progress, mode, mats, P]);
 
   return (
-    <Canvas ref={ref} frameloop={inView ? 'always' : 'never'} shadows="soft" dpr={dpr} camera={{ fov: 36, near: 1, far: 400, position: SHOTS[0].p }} gl={{ antialias: true }}>
-      {monitor}
+    <Canvas ref={ref} frameloop={inView ? 'demand' : 'never'} shadows="soft" dpr={[1, 1.5]} camera={{ fov: 36, near: 1, far: 400, position: SHOTS[0].p }} gl={{ antialias: true }}>
+      <DemandDriver />
       <color attach="background" args={[P.bg]} />
       <fog attach="fog" args={[P.bg, 70, 150]} />
       <hemisphereLight args={[night ? '#64748b' : '#ffffff', night ? '#1e293b' : '#e7e1d6', night ? 1.1 : 0.9]} />
@@ -338,11 +355,7 @@ export default function Residence({ progress, mode = 'real', theme = 'light' }) 
         shadow-bias={-0.0005}
       />
       {night && <pointLight position={[0, 3, 2]} intensity={40} distance={20} color="#fcd34d" />}
-      <Suspense fallback={null}>
-        <Environment resolution={64}>
-          <Lightformer intensity={night ? 0.3 : 1.4} position={[0, 10, 10]} scale={[30, 8, 1]} />
-        </Environment>
-      </Suspense>
+      <StudioEnv formers={[{ intensity: night ? 0.3 : 1.4, position: [0, 10, 10], scale: [30, 8] }]} />
       <Ctx.Provider value={ctx}>
         {/* Grid y plano de sombras sin escribir profundidad: evita el z-fighting a distancia (parpadeo) */}
         <Grid
