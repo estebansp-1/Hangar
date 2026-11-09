@@ -1,0 +1,27 @@
+# Dependencias y builds
+node_modules/
+dist/
+
+# Variables de entorno (NUNCA subir secretos)
+.env
+.env.local
+!.env.example
+
+# Base de datos local y previews de correo
+Backend/*.db
+Backend/*.db-journal
+Backend/prisma/*.db
+Backend/prisma/*.db-journal
+Backend/email-previews/
+
+# Herramientas del editor (skills, cachés y configuración local)
+.claude/
+**/.claude/
+**/.impeccable/
+**/.mcp.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+Backend/uploads/
