@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import SmoothScroll from './components/layout/SmoothScroll';
 import { Footer, PageTransition, Preloader, RequireAuth, Toasts } from './components/layout/Chrome';
+import Assist from './components/layout/Assist';
 import { useAuth } from './store/auth';
 import Home from './pages/Home';
 
@@ -74,6 +75,7 @@ export default function App() {
       {isAdmin ? routes : <PageTransition>{routes}</PageTransition>}
       <Footer />
       <Toasts />
+      <Assist />
     </>
   );
 }

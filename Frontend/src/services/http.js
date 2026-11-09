@@ -58,6 +58,10 @@ export const httpApi = {
     meta: () => request('/properties/meta'),
     get: (slug) => request(`/properties/${slug}`),
   },
+  assist: {
+    chat: (body) => request('/assist/chat', { method: 'POST', body }),
+    handoff: (body) => request('/assist/handoff', { method: 'POST', body }),
+  },
   styles: {
     list: () => request('/styles'),
     get: (slug) => request(`/styles/${slug}`),
