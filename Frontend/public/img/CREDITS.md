@@ -6,18 +6,14 @@ Fotos de [Unsplash](https://unsplash.com/license) (licencia libre para uso comer
 | --- | --- |
 | house-dusk.webp | [unsplash.com/photos/4vioYQ9Nn9Y](https://unsplash.com/photos/4vioYQ9Nn9Y) |
 | house-pool.webp | [unsplash.com/photos/Id7u0EkTjBE](https://unsplash.com/photos/Id7u0EkTjBE) |
-| house-white.webp | [unsplash.com/photos/_TPTXZd9mOo](https://unsplash.com/photos/_TPTXZd9mOo) |
 | house-lshape.webp | [unsplash.com/photos/ylzGfY-xzBY](https://unsplash.com/photos/ylzGfY-xzBY) |
 | house-flat.webp | [unsplash.com/photos/z6UAWpQAhXs](https://unsplash.com/photos/z6UAWpQAhXs) |
-| build-curve.webp | [unsplash.com/photos/LCPgKEYA-8Y](https://unsplash.com/photos/LCPgKEYA-8Y) |
 | build-palm.webp | [unsplash.com/photos/02fRawxKwbA](https://unsplash.com/photos/02fRawxKwbA) |
 | build-terraces.webp | [unsplash.com/photos/UEQuNtSs0AU](https://unsplash.com/photos/UEQuNtSs0AU) |
 | build-white.webp | [unsplash.com/photos/NNZ_u-WKgIo](https://unsplash.com/photos/NNZ_u-WKgIo) |
-| build-black.webp | [unsplash.com/photos/koH7IVuwRLw](https://unsplash.com/photos/koH7IVuwRLw) |
 | minimal-1.webp | [unsplash.com/photos/vIbxvHj9m9g](https://unsplash.com/photos/vIbxvHj9m9g) |
 | minimal-2.webp | [unsplash.com/photos/EVjqpcn79AM](https://unsplash.com/photos/EVjqpcn79AM) |
 | minimal-3.webp | [unsplash.com/photos/y8j0gmhtS-4](https://unsplash.com/photos/y8j0gmhtS-4) |
-| nordic-1.webp | [unsplash.com/photos/Xpf6n2SqWEI](https://unsplash.com/photos/Xpf6n2SqWEI) |
 | nordic-2.webp | [unsplash.com/photos/UTWRDWMMaag](https://unsplash.com/photos/UTWRDWMMaag) |
 | nordic-3.webp | [unsplash.com/photos/qPHpk6G9nik](https://unsplash.com/photos/qPHpk6G9nik) |
 | nordic-bath.webp | [unsplash.com/photos/N03PjHWOEFA](https://unsplash.com/photos/N03PjHWOEFA) |
@@ -41,3 +37,7 @@ Fotos de [Unsplash](https://unsplash.com/license) (licencia libre para uso comer
 | plans-1.webp | [unsplash.com/photos/HtBlQdxfG9k](https://unsplash.com/photos/HtBlQdxfG9k) |
 | plans-2.webp | [unsplash.com/photos/Yn8D5B8C-eY](https://unsplash.com/photos/Yn8D5B8C-eY) |
 | constr-1.webp | [unsplash.com/photos/VoI2jd75M6Q](https://unsplash.com/photos/VoI2jd75M6Q) |
+| house-tropical.webp | [unsplash.com/photos/HY2xcxQQ0FU](https://unsplash.com/photos/HY2xcxQQ0FU) |
+| build-palms.webp | [unsplash.com/photos/kEB8sgS3UuE](https://unsplash.com/photos/kEB8sgS3UuE) |
+| build-glass.webp | [unsplash.com/photos/Lrj39mbB5WU](https://unsplash.com/photos/Lrj39mbB5WU) |
+| living-tropical.webp | [unsplash.com/photos/5BzyDJqp0c4](https://unsplash.com/photos/5BzyDJqp0c4) |

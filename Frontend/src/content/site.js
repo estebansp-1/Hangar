@@ -25,7 +25,7 @@ export const SERVICES = [
   },
   {
     "id": "house",
-    "image": "/img/house-white.webp",
+    "image": "/img/house-tropical.webp",
     "from": 4200000,
     "title": {
       "es": "Casas a la medida",
@@ -38,7 +38,7 @@ export const SERVICES = [
   },
   {
     "id": "building",
-    "image": "/img/build-black.webp",
+    "image": "/img/build-palms.webp",
     "from": 3600000,
     "title": {
       "es": "Edificios",
@@ -90,7 +90,7 @@ export const PROCESS = [
   },
   {
     "id": "live",
-    "image": "/img/nordic-1.webp",
+    "image": "/img/living-tropical.webp",
     "title": {
       "es": "Habitar",
       "en": "Live"

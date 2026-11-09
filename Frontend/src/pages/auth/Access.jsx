@@ -13,8 +13,8 @@ import './access.css';
 const SLIDES = [
   { src: '/img/house-dusk.webp', es: 'Vivienda unifamiliar · luz de tarde', en: 'Single-family home · evening light' },
   { src: '/img/japandi-1.webp', es: 'Interiorismo japandi · roble y lino', en: 'Japandi interiors · oak and linen' },
-  { src: '/img/build-curve.webp', es: 'Edificio residencial · fachada curva', en: 'Residential building · curved facade' },
-  { src: '/img/nordic-1.webp', es: 'Sala nórdica · tonos claros', en: 'Nordic living room · light tones' },
+  { src: '/img/build-glass.webp', es: 'Torre residencial · palmas y cielo de Cali', en: 'Residential tower · palms and Cali sky' },
+  { src: '/img/living-tropical.webp', es: 'Sala tropical · madera y jardín', en: 'Tropical living room · timber and garden' },
 ];
 const TABS = ['signin', 'signup'];
 
